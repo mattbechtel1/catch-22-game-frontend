@@ -3,7 +3,8 @@ import Header from './components/Header.js'
 import './App.css';
 import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom'
 import {Login, Signup, Logout} from './components/Login'
-import GamePlay from './containers/Gameplay.js';
+import GamePlay from './containers/Gameplay.js'
+import {Button} from 'semantic-ui-react'
 
 class App extends React.Component {
   constructor() {
@@ -43,7 +44,12 @@ class App extends React.Component {
               {player ? <Logout formSubmit={this.logout} /> : <Redirect to='/login' />}
             </Route>
             <Route exact path ='/'>
-              { player ? <Link to='/play'>Start a New Game</Link> : <div>Display a random quote.</div> }
+              { player ? 
+                <div className='full-center extend-to-fill-height'>
+                  <Link className='inner-center' to='/play'><Button inverted color='red'>Start a New Game</Button></Link>
+                </div>
+                :
+                <div>Display a random quote.</div> }
             </Route>
             <Route path='/play'>
               {player ? <GamePlay user={this.player}/> : <Redirect to='/login'/> }
@@ -56,4 +62,3 @@ class App extends React.Component {
 }
 
 export default App;
-

@@ -12,7 +12,7 @@ const StatusBar = ({gameState: {money, goal, flown, sanity, name}, save}) =>
             <div>✈ Missions Complete: <Progress indicating value={flown} total={goal} progress='ratio' color='red' /></div>
             <div className='flex-left-to-right'>
                 <div style={{width: '90%'}}>Sanity: <Progress value={sanity} total='100' color='yellow' /></div>
-                <div><Button onClick={save}>Save</Button></div>        
+                {name ? <div><Button onClick={save}>Save</Button></div> : null}       
             </div>
     </div>
 
