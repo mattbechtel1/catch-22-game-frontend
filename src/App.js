@@ -2,7 +2,8 @@ import React from 'react';
 import Header from './components/Header.js'
 import './App.css';
 import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
-import {Login, Signup} from './components/Login'
+import {Login, Signup, Logout} from './components/Login'
+import GamePlay from './containers/Gameplay.js';
 
 class App extends React.Component {
   constructor() {
@@ -21,22 +22,32 @@ class App extends React.Component {
     this.setState({player: 'new playa'})
   }
 
+  logout = () => {
+    this.setState({player: null})
+  }
+
   render() {
+    const {player} = this.state
     return (
       <Router>
         <div className="App">
-          <Header player={this.state.player}/>
+          <Header player={player}/>
           <Switch>
             <Route exact path='/login'>
-              {this.state.player ? <Redirect to='/' /> : <Login formSubmit={this.submitLogin} />}
+              {player ? <Redirect to='/' /> : <Login formSubmit={this.submitLogin} />}
             </Route>
             <Route exact path='/signup'>
-              {this.state.player ? <Redirect to='/' /> : <Signup formSubmit={this.register} />}
+              {player ? <Redirect to='/' /> : <Signup formSubmit={this.register} />}
             </Route>
-            <Route exact path ='/'>Hello</Route>
+            <Route path='/logout'>
+              {player ? <Logout formSubmit={this.logout} /> : <Redirect to='/login' />}
+            </Route>
+            <Route exact path ='/'>It's the best catch there is.</Route>
+            <Route path='/play'>
+              <GamePlay />
+            </Route>
           </Switch>
         </div>
-
       </Router>
     )
   }

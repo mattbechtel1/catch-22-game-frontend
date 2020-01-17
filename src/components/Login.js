@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Link} from 'react-router-dom'
 import {Button, Segment} from 'semantic-ui-react'
 
@@ -7,11 +7,11 @@ export const Login = ({formSubmit}) => {
         <Segment inverted>
             <form onSubmit={formSubmit} action='/'>
                 <div>
-                    <label>Player Name</label>
+                    <label><em>User Name</em></label>
                     <input type="text" name="playerName" />
                 </div>
                 <div>
-                    <label>Password</label>
+                    <label><em>Password</em></label>
                     <input type='password' name='password' />
                 </div>
                 <div>
@@ -41,9 +41,28 @@ export const Signup = ({formSubmit}) => {
                     <Button inverted color='red' type='submit'>Submit</Button> 
                 </div>
             </form>
+            <div>
             <Link to='/login'>
                 <Button inverted color='red'>Log In</Button>
             </Link>
+            </div>
+        </Segment>
+    </div>) 
+}
+
+export const Logout = ({formSubmit}) => {
+    return (<div>
+        <Segment inverted>
+                <div>
+                    <label>Are you Sure You Want to Log Out?</label>
+                </div>
+
+                <div>
+                    <Button inverted color='red' onClick={formSubmit}>Yes</Button> 
+                    <Link to='/play'>
+                        <Button inverted color='red'>Not Yet</Button>
+                    </Link>
+                </div>
         </Segment>
     </div>) 
 }

@@ -12,15 +12,32 @@ code {
     monospace;
 }
 
-.alignleft {
+/* .alignleft {
   float: left;
   text-align:left;
-  /* width:33.33333%; */
-}
-.aligncenter {
+} */
+
+/* .aligncenter {
   text-align:center;
   margin: auto;
 }
 .alignright {
   float: right;
+} */
+
+.red-btn {
+  padding: 8px;
+}
+
+.flex-left-to-right {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between
+}
+
+.grey-background {
+  background-color: rgba(158, 176, 192, 0.424);
+  border-color: black;
+  border-width: 5px;
+  border-style: solid;
 }

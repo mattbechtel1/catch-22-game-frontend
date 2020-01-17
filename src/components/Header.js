@@ -6,9 +6,10 @@ const TopBar = ({player}) => {
 
     return (
         <Container>
-        <Header as="h2">
-          <Header.Content className='aligncenter'>Catch-22: The Game</Header.Content>
-          <Header.Content style={{fontSize: 'large'}} className='alignright'>
+        <Header as="h2" className='flex-left-to-right'>
+          <div>{/* Empty Div for styling purposes */}</div>
+          <Header.Content>Catch-22: The Game</Header.Content>
+          <Header.Content style={{fontSize: 'large'}}>
             {player ? <Link to='/logout'>Log Out</Link> : <Link to='/login'>Log In</Link>}
           </Header.Content>
         </Header>
