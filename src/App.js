@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './components/Header.js'
 import './App.css';
-import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom'
 import {Login, Signup, Logout} from './components/Login'
 import GamePlay from './containers/Gameplay.js';
 
@@ -42,9 +42,11 @@ class App extends React.Component {
             <Route path='/logout'>
               {player ? <Logout formSubmit={this.logout} /> : <Redirect to='/login' />}
             </Route>
-            <Route exact path ='/'>It's the best catch there is.</Route>
+            <Route exact path ='/'>
+              { player ? <Link to='/play'>Start a New Game</Link> : <div>Display a random quote.</div> }
+            </Route>
             <Route path='/play'>
-              <GamePlay />
+              {player ? <GamePlay user={this.player}/> : <Redirect to='/login'/> }
             </Route>
           </Switch>
         </div>

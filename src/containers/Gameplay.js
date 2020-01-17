@@ -1,6 +1,8 @@
 import React from 'react'
 import StatusBar from '../components/StatusBar'
 import PartnerList from './PartnerList'
+import NewGameForm from '../components/NewGameForm'
+import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
 
 export default class GamePlay extends React.Component {
     constructor(props) {
@@ -14,7 +16,11 @@ export default class GamePlay extends React.Component {
             flown: 10, //increments by 1
             goal: 40, //increments by 5 or 10
             injury: '',
-            partners: [],
+            characters: {
+                living: [],
+                specialActive: [],
+                storage: []
+            },
             soundOn: true,
             timings: 'slow',
             defaultColleagues: [],
@@ -22,8 +28,55 @@ export default class GamePlay extends React.Component {
         }
     }
 
+    convertDataToState = ({id, name, dayCount, money, sanity, flown, goal, soundOn, timings, characters}) => {
+            // debugger
+            this.setState({id, name, dayCount, money, sanity, flown, goal, soundOn, timings, 
+                characters: {
+                    living: characters.filter(character => character.sublist === 'airman'),
+                    specialActive: characters.filter(character => character.sublist === 'special'),
+                    storage: characters.filter(character => character.sublist === 'storage')
+                }
+             },
+            () => console.log('update complete'))   
+    }
+
+    newGame = (e) => {
+        e.preventDefault()
+        if (!!e.target.name.value) {
+            fetch('http://localhost:3022/games', {
+                method: 'POST',
+                headers: {
+                    accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: e.target.name.value
+                })
+            })
+            .then(response => response.json())
+            .then(this.convertDataToState)
+        } else {
+            alert('You must supply a name to begin a game.')
+        }
+    }
+
     saveGame = () => {
-        const {name, id, dayCount, money, sanity, flown, goal, injury, partners, soundOn, timings} = this.state
+        const {name, id, dayCount, money, sanity, flown, goal, injury, characters, soundOn, timings} = this.state
+        
+        let livingCharacterIds = []
+        for (const characterList in characters) {
+            livingCharacterIds.concat(characters[characterList].map(character => character.id))
+        }
+
+        let duckettStatus;
+        if (characters.storage.map(character => character.name).includes('Nurse Duckett')) {
+            duckettStatus = 'available'
+        } else if (characters.specialActive.map(character => character.name).includes('Nurse Duckett')) {
+            duckettStatus = 'live'
+        } else {
+            duckettStatus = 'unavailable'
+        }
+
         fetch('http://localhost:3022/games/' + id, {
             method: 'PUT',
             headers: {
@@ -40,7 +93,8 @@ export default class GamePlay extends React.Component {
                 soundOn: soundOn,
                 timings: timings,
                 injury: injury,
-                partner_ids: partners.map(partner => partner.id).filter(Pid => Pid !== 2)  //filter for testing
+                partner_ids: livingCharacterIds,
+                duckett: duckettStatus
             })
         })
         .then(response => response.json())
@@ -85,21 +139,20 @@ export default class GamePlay extends React.Component {
         console.log('component mounted')
         fetch('http://localhost:3022/games/1')
         .then(response => response.json())
-        .then(({id, name, dayCount, money, sanity, flown, goal, soundOn, timings, partners}) => 
-            this.setState({id, name, dayCount, money, sanity, flown, goal, soundOn, timings, partners}, () => console.log('fetch complete')))
+        .then(this.convertDataToState)
     }
 
     render() {
         return (
             <div>
                 <StatusBar gameState={this.state} save={this.saveGame} />
-                <div style={{display: 'flex'}}>
+                <div className='extend-to-fill-height gridlines' style={{display: 'flex'}}>
                     <div style={{width: '20%', flexDirection: 'column', flex: 1}}>
-                        <div style={{flexGrow: 1}}><PartnerList /></div>
-                        <div style={{position: 'absolute', bottom: '5px'}}><PartnerList /></div>
+                        <div><PartnerList people={this.state.characters.living}/></div>
+                        <div style={{position: 'absolute', bottom: '5px'}}><PartnerList people={this.state.characters.specialActive} /></div>
                     </div>
-                    <div style={{width: '80%'}}>
-                        80% width
+                    <div className='gridlines full-center' style={{width: '80%'}}>
+                        {this.state.gameId ? null : <NewGameForm start={this.newGame}/>}
                     </div>
                 </div>
             </div>

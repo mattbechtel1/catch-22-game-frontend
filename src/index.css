@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html body {
+  height: 100%
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -41,3 +45,28 @@ code {
   border-width: 5px;
   border-style: solid;
 }
+
+.gridlines {
+  border-color: black;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.extend-to-fill-height {
+  min-height: 700px;
+  height: auto;
+  position: relative
+}
+
+.full-center {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.inner-center {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
