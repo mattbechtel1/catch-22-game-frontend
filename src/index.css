@@ -70,6 +70,12 @@ code {
   transform: translate(-50%, -50%);
 }
 
+.inner-center-tall {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
 .header-center {
   position: relative;
   transform: translate(0, 10px);
@@ -89,3 +95,12 @@ code {
   color: violet
 }
 
+.blur {
+  -webkit-filter: blur(5px);
+  filter: blur(5px)
+}
+
+.unblur {
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+}

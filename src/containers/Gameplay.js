@@ -109,18 +109,26 @@ export default class GamePlay extends React.Component {
         this.setState({activePartner: character})
     }
 
+    deactivateCharacterCard = () => {
+        this.setState({activePartner: null})
+    }
+
+    determineBlur = () => {
+        return this.state.activePartner ? 'blur' : 'unblur'
+    }
+
     render() {
         return (
             <div>
                 <StatusBar gameState={this.state} save={this.saveGame} />
                 <div className='extend-to-fill-height gridlines' style={{display: 'flex'}}>
-                    <div style={{width: '20%', flexDirection: 'column', flex: 1}}>
+                    <div className={this.determineBlur()} style={{width: '20%', flexDirection: 'column', flex: 1}}>
                         <div><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/></div>
                         <div style={{position: 'relative', bottom: '5px', paddingTop: '25px'}}><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.specialActive} /></div>
                     </div>
                     <div className='gridlines full-center' style={{width: '80%'}}>
                         {this.state.activePartner ? 
-                            <PartnerCard character={this.state.activePartner} /> 
+                            <PartnerCard unmount={this.deactivateCharacterCard} character={this.state.activePartner} /> 
                             :
                             this.state.id ? 
                                 <p>You are Playing!</p> : 

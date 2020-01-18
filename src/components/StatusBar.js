@@ -1,7 +1,7 @@
 import React from 'react'
 import {Progress, Button} from 'semantic-ui-react'
 
-const StatusBar = ({gameState: {money, goal, flown, sanity, name}, save}) => 
+const StatusBar = ({gameState: {money, goal, flown, sanity, name}, save, blurClass}) => 
     <div className='grey-background'>
         <div className='flex-left-to-right'>
             <div><h3>{name}</h3></div>
