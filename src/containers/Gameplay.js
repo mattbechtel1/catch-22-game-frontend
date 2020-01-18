@@ -2,7 +2,7 @@ import React from 'react'
 import StatusBar from '../components/StatusBar'
 import PartnerList from './PartnerList'
 import NewGameForm from '../components/NewGameForm'
-import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
+import PartnerCard from '../components/PartnerCard'
 
 export default class GamePlay extends React.Component {
     constructor(props) {
@@ -69,9 +69,9 @@ export default class GamePlay extends React.Component {
         }
 
         let duckettStatus;
-        if (characters.storage.map(character => character.name).includes('Nurse Duckett')) {
+        if (characters.storage.find(character => character.name === 'Nurse Duckett')) {
             duckettStatus = 'available'
-        } else if (characters.specialActive.map(character => character.name).includes('Nurse Duckett')) {
+        } else if (characters.specialActive.find(character => character.name === 'Nurse Duckett')) {
             duckettStatus = 'live'
         } else {
             duckettStatus = 'unavailable'
@@ -101,45 +101,12 @@ export default class GamePlay extends React.Component {
         .then(json => console.log(json))
     }
 
-    payday = () => {
-        this.setState({
-            money: this.state.money + 15,
-            sanity: this.state.sanity + 3
-            })
-        this.displayMessage('Payday! Go out and enjoy that wartime Italian inflation!')
-    }
-
-    postTurnChecks = () => {
-        let toGoal = this.state.goal - this.state.flown
-        if (this.state.dayCount % 7 === 0) {this.payday()}
-        if (Math.random() < 1/(toGoal**1.5)) {this.cathcart()}
-    }
-
-    cathcart = () => {
-        let toGoal = this.state.goal - this.state.flown
-        if (Math.random() < 0.2) {
-            this.setState({
-                goal: this.state.goal + 10,
-                sanity: this.state.sanity - Math.max(10 - toGoal, 1)
-            }, () => this.displayMessage('Colonel Cathcart raised the required number of missions by TEN to ' + this.state.goal + '.'))
-        } else {
-            this.setState({
-                goal: this.state.goal + 5,
-                sanity: this.state.sanity - Math.max(5 - toGoal, 0)
-            }, () => this.displayMessage('Colonel Cathcart raised the required number of missions by five to ' + this.state.goal)
-            )
-        }
-    }
-
-    displayMessage = (message) => {
-        console.log(message)
-    }
-
     componentDidMount() {
         console.log('component mounted')
-        fetch('http://localhost:3022/games/1')
-        .then(response => response.json())
-        .then(this.convertDataToState)
+    }
+
+    showCharacterCard = (character) => {
+        this.setState({activePartner: character})
     }
 
     render() {
@@ -148,16 +115,21 @@ export default class GamePlay extends React.Component {
                 <StatusBar gameState={this.state} save={this.saveGame} />
                 <div className='extend-to-fill-height gridlines' style={{display: 'flex'}}>
                     <div style={{width: '20%', flexDirection: 'column', flex: 1}}>
-                        <div><PartnerList people={this.state.characters.living}/></div>
-                        <div style={{position: 'absolute', bottom: '5px'}}><PartnerList people={this.state.characters.specialActive} /></div>
+                        <div><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/></div>
+                        <div style={{position: 'relative', bottom: '5px', paddingTop: '25px'}}><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.specialActive} /></div>
                     </div>
                     <div className='gridlines full-center' style={{width: '80%'}}>
-                        {this.state.gameId ? null : <NewGameForm start={this.newGame}/>}
+                        {this.state.activePartner ? 
+                            <PartnerCard character={this.state.activePartner} /> 
+                            :
+                            this.state.id ? 
+                                <p>You are Playing!</p> : 
+                                <NewGameForm start={this.newGame}/>
+                        }
                     </div>
                 </div>
             </div>
-        )
-        
+        )        
         
     }
 

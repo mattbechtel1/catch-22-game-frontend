@@ -53,7 +53,7 @@ code {
 }
 
 .extend-to-fill-height {
-  min-height: 700px;
+  min-height: 400px;
   height: auto;
   position: relative
 }
@@ -68,5 +68,24 @@ code {
   position: relative;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.header-center {
+  position: relative;
+  transform: translate(0, 10px);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.white-text {
+  color: white
+}
+
+.header-link {
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+.header-link:hover {
+  color: violet
 }
 

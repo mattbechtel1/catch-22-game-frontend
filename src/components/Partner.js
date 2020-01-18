@@ -1,9 +1,8 @@
 import React from 'react'
 import {List} from 'semantic-ui-react'
 
-const Partner = ({character}) => {
+const Partner = ({character, clickHandler}) => {
     let icon
-
     switch (character.sublist) {
         case 'airman':
             icon = 'plane'
@@ -27,10 +26,11 @@ const Partner = ({character}) => {
             icon = 'user'
     }
 
-    return (<List.Item as='h4'>
-        <List.Icon name={icon} />
-        <List.Content>{character.name}</List.Content>
-    </List.Item>)
+    return (
+        <List.Item as='h4' style={{margin: '0px'}} onClick={clickHandler}>
+            <List.Content><List.Icon name={icon} /> {character.name}</List.Content>
+        </List.Item>
+    )
 }
 
 export default Partner
