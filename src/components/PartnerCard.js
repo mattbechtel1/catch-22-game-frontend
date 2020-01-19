@@ -17,7 +17,6 @@ class PartnerCard extends React.Component {
     }
 
     handleOffClick = (e) => {
-        // debugger
         if (this.node.contains(e.target)) {
             return;
         }
@@ -25,8 +24,8 @@ class PartnerCard extends React.Component {
     }
 
     render() {
-        const {description, name, sanityChange, occupation} = this.props.character
-        // debugger
+        const {description, name, occupation} = this.props.character
+
         return ( 
             <div className='inner-center-tall' ref={node => {this.node = node}}>
                 <Card>
@@ -39,7 +38,7 @@ class PartnerCard extends React.Component {
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>
-                        <a><Icon name='user' />22 Friends</a>
+                        {/* <a><Icon name='user' />22 Friends</a> */}
                     </Card.Content>
                 </Card>
             </div>

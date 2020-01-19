@@ -12,8 +12,8 @@ export default class GamePlay extends React.Component {
             name: '',
             dayCount: 0,
             money: 0,
-            sanity: 50, //scaled 0 to 100
-            flown: 10, //increments by 1
+            sanity: 0, //scaled 0 to 100
+            flown: 0, //increments by 1
             goal: 40, //increments by 5 or 10
             injury: '',
             characters: {
@@ -65,7 +65,7 @@ export default class GamePlay extends React.Component {
         
         let livingCharacterIds = []
         for (const characterList in characters) {
-            livingCharacterIds.concat(characters[characterList].map(character => character.id))
+            livingCharacterIds.push(...characters[characterList].map(character => character.id))
         }
 
         let duckettStatus;
@@ -86,7 +86,7 @@ export default class GamePlay extends React.Component {
             body: JSON.stringify({
                 name: name,
                 dayCount: dayCount,
-                money: money + 20,
+                money: money,
                 sanity: sanity,
                 flown: flown,
                 goal: goal,
@@ -97,8 +97,7 @@ export default class GamePlay extends React.Component {
                 duckett: duckettStatus
             })
         })
-        .then(response => response.json())
-        .then(json => console.log(json))
+        .then(() => this.setState({activeBtn: false}))
     }
 
     componentDidMount() {
@@ -120,7 +119,7 @@ export default class GamePlay extends React.Component {
     render() {
         return (
             <div>
-                <StatusBar gameState={this.state} save={this.saveGame} />
+                <StatusBar gameState={this.state} save={this.saveGame} blurClass={this.determineBlur}/>
                 <div className='extend-to-fill-height gridlines' style={{display: 'flex'}}>
                     <div className={this.determineBlur()} style={{width: '20%', flexDirection: 'column', flex: 1}}>
                         <div><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/></div>

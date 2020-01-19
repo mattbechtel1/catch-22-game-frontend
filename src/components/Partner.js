@@ -15,13 +15,28 @@ const Partner = ({character, clickHandler}) => {
                 case 'Nurse Duckett':
                     icon = 'heart'
                     break;
+                case 'Major Major Major Major':
+                    icon = 'plane'
+                    break;
+                case "Nately's Whore":
+                    icon = 'warning circle'
+                    break;
                 default:
                 icon = 'user'
             }
         break;
         case 'special':
-            icon = 'plane'
-            break;
+            switch (character.name) {
+                case 'Milo':
+                    icon = 'plane'
+                    break;
+                case 'Doc Daneeka':
+                    icon = 'user md'
+                    break;
+                default:
+                    icon = 'user'
+            }
+        break;
         default:
             icon = 'user'
     }
