@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Image, Icon} from 'semantic-ui-react'
+import {Card, Image} from 'semantic-ui-react'
 
 
 class PartnerCard extends React.Component {

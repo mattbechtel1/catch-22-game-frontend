@@ -1,7 +1,7 @@
 import React from 'react'
 import {Progress, Button} from 'semantic-ui-react'
 
-const StatusBar = ({gameState: {money, goal, flown, sanity, name, activeBtn}, save, blurClass}) => {
+const StatusBar = ({gameState: {money, goal, flown, sanity, name, leave, activeBtn}, save, blurClass}) => {
 
     return (
         <div className={`grey-background + ${blurClass()}`}>
@@ -9,6 +9,7 @@ const StatusBar = ({gameState: {money, goal, flown, sanity, name, activeBtn}, sa
                 <div><h3>{name}</h3></div>
                 <div><span role='img' aria-label='hospital-icon'>🏥</span> Health <span aria-label='hospital-icon' role='img'>🏥</span></div>
                 <div>${money}</div>
+                <div>Accumulated Leave: {leave} Days</div>
                 <div>Settings Modal Link Icon</div>
             </div>
                 <div>Sanity: <Progress value={sanity} total='100' color='yellow' /></div>
