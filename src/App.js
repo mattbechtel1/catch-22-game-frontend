@@ -89,6 +89,7 @@ class App extends React.Component {
             <Route exact path ='/'>
               { player ? 
                 <div className='full-center extend-to-fill-height'>
+                  {/* options to load previous games go here */}
                   <Link className='inner-center' to='/play'><Button inverted color='red'>Start a New Game</Button></Link>
                 </div>
                 :
