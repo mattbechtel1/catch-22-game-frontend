@@ -68,6 +68,7 @@ export default class GamePlay extends React.Component {
     newGame = (e) => {
         e.preventDefault()
         if (!!e.target.name.value) {
+            this.setState({loading: true})
             fetch('http://localhost:3022/games', {
                 method: 'POST',
                 headers: {
@@ -75,12 +76,14 @@ export default class GamePlay extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: e.target.name.value
+                    name: e.target.name.value,
+                    user_id: this.props.userId
                 })
             })
             .then(response => response.json())
             .then((data) => { 
                 this.convertDataToState(data)
+                this.setState({loading: false})
                 this.gameBegin()
             })
         } else {
@@ -143,12 +146,16 @@ export default class GamePlay extends React.Component {
     }
 
     changeSound = () => {
-        this.setState({soundOn: !this.state.soundOn})
+        this.setState({
+            soundOn: !this.state.soundOn,
+            activeBtn: true
+        })
     }
 
     changeTimings = (e) => {
         this.setState({
-            timings: parseInt(e.target.value, 10)
+            timings: parseInt(e.target.value, 10),
+            activeBtn: true
         })
     }
 
@@ -222,7 +229,7 @@ export default class GamePlay extends React.Component {
         let characters = [...this.state.characters.living]
 
         let volunteers = characters.sort(() => 0.5 - Math.random()).slice(0,5)
-        this.displayMessages("The following men are assigned to this mission. Who would you like to fly with?")
+        this.displayMessages("The following men are assigned to this mission. Whom would you like to fly with?")
         this.provideOptions(...volunteers.map(char => {
             return {text: char.name, callResult: (() => this.partnerUp(char.id, volunteers, runType))}
         }))
@@ -275,7 +282,6 @@ export default class GamePlay extends React.Component {
                     yourHits = 0
                 } else if (hitPunisher < 0.25) {
                     messages.push(`${todaysPartner.name} was mortally injured during the barrage of anti-aircraft fire.`)
-                    console.log(todaysPartner, this.state.characters.living.filter(char => char !== todaysPartner))
                     this.setState({
                         sanity: this.state.sanity - 10,
                         characters: {
@@ -353,7 +359,7 @@ export default class GamePlay extends React.Component {
                     
                     pairingBHits = 0
                 } else if (hitPunisher < 0.15) {
-                    messages.push(pairingB[0].name + " was injured during the barrage.", "He has checked into the hospital.")
+                    messages.push(pairingB[0].name + " was a casualty of the attack.")
                     this.setState({characters: {
                         ...this.state.characters,
                         living: this.state.characters.living.filter(char => char !== pairingB[0])
@@ -361,7 +367,7 @@ export default class GamePlay extends React.Component {
                     }})
                     pairingBHits = 0
                 } else if (hitPunisher < 0.25) {
-                    messages.push(pairingB[1].name + " was injured during the barrage.", "He has checked into the hospital.")
+                    messages.push(pairingB[1].name + " was a casualty of the attack.")
                     this.setState({characters: {
                         ...this.state.characters,
                         living: this.state.characters.living.filter(char => char !== pairingB[1])
@@ -424,7 +430,7 @@ export default class GamePlay extends React.Component {
             leave: this.state.leave + 0.6,
             activeBtn: true
             })
-        await this.displayMessages('Payday! Time to enjoy that wartime Italian inflation!')
+        await this.displayMessages('Payday! It should be easier to take advantage of that wartime Italian inflation!')
         return
     }
 
@@ -509,7 +515,7 @@ export default class GamePlay extends React.Component {
                 await this.displayMessages("Out of nowhere, Nately's girlfriend attacked you.", "You managed to dodge her attack.")
             } else if (attack < 0.04) {
                 await this.displayMessages("Out or nowhere, Nately's girlfriend attacked you.", "She caught you with her knife.")
-                this.injury('knife wound')
+                this.injury('a knife wound')
             }
         }
 
@@ -688,7 +694,6 @@ export default class GamePlay extends React.Component {
     }
     
     bookEvent = async () => {
-        alert("A book event occurs")
 
         if (this.state.characters.living.find(char => char.name === "Major Major")) {
             this.setState({
@@ -701,7 +706,7 @@ export default class GamePlay extends React.Component {
            
             await (this.displayMessages("Due to a computer error, Major M. Major has been promoted to Major.", "You may now refer to him as Major Major Major Major."))
         } else if (!this.state.miloTrip && this.state.leave >= 7) {
-            await this.displayMessages(`Milo invited you ${this.state.characters.living.find(char => char.name === 'Orr' ? 'and Orr ' : '')}on a trip to Sicily to help him procure foodstuffs`, 'First, you made a pitstop in Palmero', 'It turns out Milo is the mayor of Palmero.') //add more
+            await this.displayMessages(`Milo invited you ${this.state.characters.living.find(char => char.name === 'Orr' ? 'and Orr ' : '')}on a trip to Sicily to help him procure foodstuffs`, 'First, you made a pitstop in Palmero', 'It turns out Milo is the mayor of Palmero.', "You then travelled all over the Mediterranean, trading commodities in search of profit.", `You ${this.state.characters.living.find(char => char.name === 'Orr' ? 'and Orr ' : '')}got no sleep.`, "It was not a very relaxing time off.") //add more
             this.setState({
                 miloTrip: true,
                 dayCount: this.state.dayCount + 7,
@@ -720,6 +725,17 @@ export default class GamePlay extends React.Component {
                     living: this.state.characters.living.filter(char => char.name !== 'McWatt'),
                 }
             })
+        } else if (this.state.characters.storage.find(char => char.name === "Orr")) {
+            await this.displayMessages('You heard a rumor that Orr survived his crash landing and sailed to freedom in Sweden.', 'You pondered whether you should go AWOL.')
+            this.setState({
+                sanity: this.state.sanity + 3,
+                characters: {
+                    ...this.state.characters,
+                    living: this.state.characters.storage.filter(char => char.name !== 'Orr')
+                }
+            })
+        } else {
+            await this.displayMessages('You had a quiet day.')
         }
 
         this.setState((state) => ({
@@ -798,20 +814,3 @@ export default class GamePlay extends React.Component {
         )           
     }
 }
-
-
-
-
-// ideas
-
-// If Orr 'dies', he is replaced by 4 non-descript pilots
-// Other novel characters
-// If sanity falls below 10, option to ask Doc to declare you clinically insane is offered
-
-// event types, all increment day count by 1, except holidays
-// MISSION VOLUNTEERED
-// MISSION DRAFTED
-// MISSION DECLINED
-// HOLIDAY BREAK
-// HOSPITAL DAY
-// MILO MISSION

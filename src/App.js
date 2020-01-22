@@ -172,7 +172,7 @@ class App extends React.Component {
                   </Container> }
             </Route>
             <Route path='/play'>
-              {player ? <GamePlay activeGame={activeGameId} /> : <Redirect to='/login'/> }
+              {player ? <GamePlay activeGame={activeGameId} userId={player.id} /> : <Redirect to='/login'/> }
             </Route>
           </Switch>
         </div>

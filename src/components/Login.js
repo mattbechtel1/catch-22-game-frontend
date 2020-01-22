@@ -13,8 +13,8 @@ export const Login = ({formSubmit}) => {
                     <label><em>Password</em></label> <Input type='password' name='password' />
                 </div>
                 <div style={{padding: '3px'}}>
-                    <Button inverted color='red' type='submit'>Submit</Button>
-                    <Link to='/signup'><Button inverted color='red'>Register</Button></Link> 
+                    <Button inverted color='red' type='submit'>Sign In</Button>
+                    <Link to='/signup'><Button inverted color='red'>New User</Button></Link> 
                 </div>
             </form>
             
@@ -33,7 +33,7 @@ export const Signup = ({formSubmit}) => {
                     <label><em>Password</em></label> <Input type='password' name='password' />
                 </div>
                 <div style={{padding: '3px'}}>
-                    <Button inverted color='red' type='submit'>Submit</Button>
+                    <Button inverted color='red' type='submit'>Register</Button>
                     <Link to='/login'><Button inverted color='red'>Log In</Button></Link> 
                 </div>
             </form>
@@ -53,7 +53,7 @@ export const Logout = ({formSubmit}) => {
 
             <div style={{padding: '3px'}}>
                 <Button inverted color='red' onClick={formSubmit}>Yes</Button> 
-                <Link to='/play'>
+                <Link to='/'>
                     <Button inverted color='red'>Not Yet</Button>
                 </Link>
             </div>
