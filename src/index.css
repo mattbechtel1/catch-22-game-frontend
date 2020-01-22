@@ -104,3 +104,12 @@ code {
   filter: blur(0px);
   -webkit-filter: blur(0px);
 }
+
+.corner {
+  position: absolute;
+  top: 400px;
+  right: 0;
+  width: 20px;
+  height: 10px;
+  border: 3px solid #73AD21;
+}
