@@ -4,14 +4,16 @@ import './App.css';
 import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom'
 import {Login, Signup, Logout} from './components/Login'
 import GamePlay from './containers/Gameplay.js'
-import {Button, Container} from 'semantic-ui-react'
+import {Button, Container, Loader} from 'semantic-ui-react'
 
 class App extends React.Component {
   constructor() {
     super()
     this.state = {
       player: null,
-      userGames: null
+      userGames: [],
+      activeGameId: 0,
+      loading: true
     }
   }
 
@@ -56,23 +58,89 @@ class App extends React.Component {
     "And it wasn't their fault that they were courageous, confident and carefree. He would just have to be patient with them until one or two were killed and the rest wounded, and then they would all turn out okay.",
     "Dear Mrs., Mr., Miss, or Mr. and Mrs. Daneeka: Words cannot express the deep personal grief I experienced when your husband, son, father, or brother was killed, wounded, or reported missing in action."]
 
+  componentDidMount() {
+    let token = localStorage.getItem('token')
+    if (token) {
+      fetch('http://localhost:3022/api/v1/profile', {
+        method: 'GET',
+        headers: { 'Authentication': token }
+      })
+      .then(response => response.json())
+      .then(data => this.setState({
+        player: data,
+        userGames: data.games,
+        loading: false
+      })
+      )
+    } else {
+      this.setState({loading: false})
+    }
+  }
+
   submitLogin = (e) => {
     e.preventDefault()
-    this.setState({player: 'old playa'})
-    // fetch user for serialized json
+    fetch('http://localhost:3022/api/v1/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user: {
+          username: e.target.playerName.value,
+          password: e.target.password.value
+        }
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.error) {
+        localStorage.setItem('token', data.jwt)
+        this.setState({
+          player: data.user,
+          userGames: data.user.games
+        })
+      } else {
+        alert(data.message)
+      }
+    })
+
+    
   }
 
   register = (e) => {
     e.preventDefault()
-    this.setState({player: 'new playa'})
+    fetch('http://localhost:3022/api/v1/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        user: {
+          username: e.target.playerName.value,
+          password: e.target.password.value
+        }
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({
+        player: data.user
+      })
+    })
   }
 
   logout = () => {
     this.setState({player: null})
+    localStorage.removeItem('token')
+  }
+
+  changeActiveGame = (e) => {
+    this.setState({
+      activeGameId: parseInt(e.currentTarget.id.split('-')[1])
+    })
   }
 
   render() {
-    const {player} = this.state
+    const {player, loading, userGames, activeGameId} = this.state
     return (
       <Router>
         <div className="App">
@@ -90,16 +158,21 @@ class App extends React.Component {
             <Route exact path ='/'>
               { player ? 
                 <div className='black-bg full-center extend-to-fill-height'>
-                  {/* options to load previous games go here */}
-                  <Link className='inner-center' to='/play'><Button inverted color='red'>Start a New Game</Button></Link>
+                  <div className='inner-center'>
+                    <div>{userGames.map(game => <Link key={'link-' + game.id}to='/play'><Button inverted style={{padding: '8px', margin: '3px'}} key={'game-' + game.id} onClick={this.changeActiveGame} id={'game-' + game.id} color='grey'><strong>{game.name}</strong><br /> <em>Missions Complete: {game.flown}</em></Button></Link>)}</div>
+                    <div><Link to='/play'><Button inverted style={{padding: '8px', margin: '3px'}} color='red'>Start a New Game</Button></Link></div>
+                  </div>
                 </div>
                 :
-                <Container className='black-bg white-text'>
-                  <h4>"{this.quotes[Math.floor(Math.random()*this.quotes.length)]}"</h4>
-                </Container> }
+                  loading ?
+                  <div style={{margin: '50px'}}><Loader active inline='centered' /></div> 
+                  :
+                  <Container className='black-bg white-text'>
+                   <h4>{this.quotes[Math.floor(Math.random()*this.quotes.length)]}</h4>
+                  </Container> }
             </Route>
             <Route path='/play'>
-              {player ? <GamePlay user={this.player}/> : <Redirect to='/login'/> }
+              {player ? <GamePlay activeGame={activeGameId} /> : <Redirect to='/login'/> }
             </Route>
           </Switch>
         </div>

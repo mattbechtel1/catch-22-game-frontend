@@ -5,6 +5,7 @@ import NewGameForm from '../components/NewGameForm'
 import PartnerCard from '../components/PartnerCard'
 import OptionList from '../components/OptionList'
 import Message from '../components/Message'
+import {Loader} from 'semantic-ui-react'
 
 export default class GamePlay extends React.Component {
     constructor(props) {
@@ -31,7 +32,8 @@ export default class GamePlay extends React.Component {
             activeBtn: false,
             activePartner: null,
             message: '',
-            options: []
+            options: [],
+            loading: true
         }
     }
 
@@ -43,6 +45,22 @@ export default class GamePlay extends React.Component {
                     storage: characters.filter(character => character.sublist === 'storage')
                 }
              })   
+    }
+
+    componentDidMount() {
+        let gameId = this.props.activeGame
+        // opens saved game on load
+        if (gameId) {
+            fetch(`http://localhost:3022/games/${gameId}`)
+            .then(response => response.json())
+            .then(data => this.convertDataToState(data))
+            .then(() => {
+                this.setState({loading: false})
+                this.nextDayRandomizer()
+            })
+        } else {
+            this.setState({loading: false})
+        }
     }
 
     injuryOptions = ["liver disease", "food poisoning", "a broken finger", "a leg wound", "a scrotal injury", "torn pants", "bruised ego", "athlete's foot", "mistaken identity"]
@@ -151,15 +169,15 @@ export default class GamePlay extends React.Component {
         await this.displayMessages("Welcome to Pianosa!", 
             "You are a bombardier in the 256th US Army Air Squadron.", 
             "Your only goal is to get home alive.", 
-            "Per U.S. Army Air Force policy, you will be welcomed home after you complete 40 missions.", 
-            "You have also been informed that people who have been declared insane are grounded in accordance with U.S. Army Air Force policy.",
-            "It is up to you to determine how you will escape this war.")
+            "Per U.S. Army Air Force policy, you can go home after you complete 40 missions.", 
+            "You also know that people who have been medically determined to be insane are grounded.",
+            "It is up to you to determine which route will allow you to escape this war.")
             .then(this.playAirRound)
     }
 
     playAirRound = async () => {
 
-        const passedMsg = "You have passed on too many consecutive missions and are required to participate in the next one."
+        const passedMsg = "You have passed on too many consecutive missions and are required to participate in this one."
         const random = Math.random()
         if (this.state.passCount < 2) {
             if ((this.state.flown < 50 && random < 0.4) || random < 0.2) {
@@ -222,8 +240,6 @@ export default class GamePlay extends React.Component {
         }
         adjustedVolunteers.sort(() => 0.5 - Math.random())
 
-        console.log(todaysPartner, adjustedVolunteers)
-
         let pairingA = [adjustedVolunteers[0], adjustedVolunteers[1]]
         let pairingB = [adjustedVolunteers[2], adjustedVolunteers[3]]
 
@@ -258,7 +274,7 @@ export default class GamePlay extends React.Component {
                     injured = true
                     yourHits = 0
                 } else if (hitPunisher < 0.25) {
-                    messages.push(`${todaysPartner.name} was injured during the barrage of anti-aircraft fire.`)
+                    messages.push(`${todaysPartner.name} was mortally injured during the barrage of anti-aircraft fire.`)
                     console.log(todaysPartner, this.state.characters.living.filter(char => char !== todaysPartner))
                     this.setState({
                         sanity: this.state.sanity - 10,
@@ -281,14 +297,23 @@ export default class GamePlay extends React.Component {
                 let hitPunisher = Math.random()
 
                 if (hitPunisher < 0.05) {
-                    messages.push(`${pairingA[0].name} and ${pairingA[1].name} were shot down during the mission. They are believed to be dead.`)
+                    messages.push(`${pairingA[0].name} and ${pairingA[1].name} were shot down during the mission. They are presumed dead.`)
+                    
+                    if (pairingA[0].name === 'Orr' || pairingA[1].name === 'Orr') {
+                        this.setState({characters: {
+                            ...this.state.characters,
+                            storage: [...this.state.characters, pairingA[0], pairingA[0]]
+                        }})
+                    }
+                    
                     this.setState({characters: {
                         ...this.state.characters,
                         living: this.state.characters.living.filter(char => char !== pairingA[0] && char !== pairingA[1])
                     }})
+                    
                     pairingAHits = 0
                 } else if (hitPunisher < 0.15) {
-                    messages.push(pairingA[0].name + " was injured during the barrage.", "He has checked into the hospital.")
+                    messages.push(pairingA[0].name + " was mortally injured during the barrage.")
                     this.setState({characters: {
                         ...this.state.characters,
                         living: this.state.characters.living.filter(char => char !== pairingA[0])
@@ -296,7 +321,7 @@ export default class GamePlay extends React.Component {
                     }})
                     pairingAHits = 0
                 } else if (hitPunisher < 0.25) {
-                    messages.push(pairingA[1].name + " was injured during the barrage.", "He has checked into the hospital.")
+                    messages.push(pairingA[1].name + " was mortally injured during the barrage.")
                     this.setState({characters: {
                         ...this.state.characters,
                         living: this.state.characters.living.filter(char => char !== pairingA[1])
@@ -313,11 +338,19 @@ export default class GamePlay extends React.Component {
 
                 if (hitPunisher < 0.05) {
                     messages.push(`${pairingB[0].name} and ${pairingB[1].name} were shot down during the mission. They are believed to be dead.`)
+
+                    if (pairingB[0].name === 'Orr' || pairingB[1].name === 'Orr') {
+                        this.setState({characters: {
+                            ...this.state.characters,
+                            storage: [...this.state.characters, pairingA[0], pairingA[0]]
+                        }})
+                    }
+
                     this.setState({characters: {
                         ...this.state.characters,
                         living: this.state.characters.living.filter(char => char !== pairingB[0] && char !== pairingB[1])
                     }})
-                    debugger
+                    
                     pairingBHits = 0
                 } else if (hitPunisher < 0.15) {
                     messages.push(pairingB[0].name + " was injured during the barrage.", "He has checked into the hospital.")
@@ -378,7 +411,7 @@ export default class GamePlay extends React.Component {
     }
 
     deathScreen = async () => {
-        await this.displayMessages("Game Ended")
+        await this.displayMessages("Game Over!")
         this.setState({
             gameId: 0,
             activeBtn: false
@@ -483,7 +516,11 @@ export default class GamePlay extends React.Component {
         // checks for min and max sanity
         if (this.state.sanity < 0) {this.setState({sanity: 0})
         } else if (this.state.sanity > 100) {this.setState({sanity: 100})}
+        
+        this.nextDayRandomizer()
+    }
     
+    nextDayRandomizer = async () => {
         let nextDayRandomizer = Math.random()
         
         if (nextDayRandomizer < 0.5) {
@@ -734,6 +771,9 @@ export default class GamePlay extends React.Component {
         return (
             <div>
                 <StatusBar gameState={this.state} save={this.saveGame} blurClass={this.determineBlur} changeSound={this.changeSound} changeTextSpeed={this.changeTimings} />
+                { this.state.loading ?
+                <div style={{margin: '50px'}}><Loader active inline='centered' /></div> 
+                :
                 <div className='extend-to-fill-height gridlines' style={{display: 'flex'}}>
                     <div className={this.determineBlur()} style={{width: '20%', flexDirection: 'column', flex: 1}}>
                         <div><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/></div>
@@ -753,6 +793,7 @@ export default class GamePlay extends React.Component {
                         <div className='corner' onClick={this.debug}></div>
                     </div>
                 </div>
+                }
             </div>
         )           
     }
