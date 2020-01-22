@@ -27,12 +27,10 @@ export const Signup = ({formSubmit}) => {
         <Container style={{backgroundColor: 'black'}} className='white-text'>
             <form onSubmit={formSubmit}>
                 <div style={{padding: '3px'}}>
-                    <label><em>Username</em></label>
-                    <Input name="playerName" />
+                    <label><em>Username</em></label> <Input name="playerName" />
                 </div>
                 <div style={{padding: '3px'}}>
-                    <label><em>Password</em></label>
-                    <Input type='password' name='password' />
+                    <label><em>Password</em></label> <Input type='password' name='password' />
                 </div>
                 <div style={{padding: '3px'}}>
                     <Button inverted color='red' type='submit'>Submit</Button>

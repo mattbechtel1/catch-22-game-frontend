@@ -1,6 +1,5 @@
 import React from 'react'
 import {List} from 'semantic-ui-react'
-import { render } from '@testing-library/react'
 
 class Partner extends React.Component {
     constructor(props) {

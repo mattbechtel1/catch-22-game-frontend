@@ -45,7 +45,7 @@ export default class GamePlay extends React.Component {
              })   
     }
 
-    injuryOptions = ["liver disease", "food poisoning", "a broken finger", "a leg wound", "a scrotal injury", "torn pants", "athlete's foot", "mistaken identity"]
+    injuryOptions = ["liver disease", "food poisoning", "a broken finger", "a leg wound", "a scrotal injury", "torn pants", "bruised ego", "athlete's foot", "mistaken identity"]
 
     newGame = (e) => {
         e.preventDefault()
@@ -200,7 +200,10 @@ export default class GamePlay extends React.Component {
     }
 
     providePartners = (runType) => {
-        let volunteers = this.state.characters.living.sort(() => 0.5 - Math.random()).slice(0,5)
+        // clones living characters array to preserve alphabetical order of list held in state
+        let characters = [...this.state.characters.living]
+
+        let volunteers = characters.sort(() => 0.5 - Math.random()).slice(0,5)
         this.displayMessages("The following men are assigned to this mission. Who would you like to fly with?")
         this.provideOptions(...volunteers.map(char => {
             return {text: char.name, callResult: (() => this.partnerUp(char.id, volunteers, runType))}
@@ -210,8 +213,16 @@ export default class GamePlay extends React.Component {
     partnerUp = async (charId, volunteers, runType) => {
         this.clearOptions()
         const todaysPartner = this.state.characters.living.find(char => char.id === charId)
-        const adjustedVolunteers = volunteers.filter(volunteer => volunteer !== todaysPartner)
+        let adjustedVolunteers
+        if (todaysPartner.name !== 'Recruit') { 
+            adjustedVolunteers = volunteers.filter(volunteer => volunteer !== todaysPartner)
+        } else {
+            volunteers.splice(volunteers.findIndex(char => char.name === 'Recruit'), 1)
+            adjustedVolunteers = volunteers
+        }
         adjustedVolunteers.sort(() => 0.5 - Math.random())
+
+        console.log(todaysPartner, adjustedVolunteers)
 
         let pairingA = [adjustedVolunteers[0], adjustedVolunteers[1]]
         let pairingB = [adjustedVolunteers[2], adjustedVolunteers[3]]
@@ -241,12 +252,14 @@ export default class GamePlay extends React.Component {
                     messages.push(`Your plane was shot down. You and ${todaysPartner.name} perished.`)
                     await this.displayMessages(...messages)
                     dead = true
+                    yourHits = 0
                 } else if (hitPunisher < 0.15) {
                     messages.push("You were injured during the barrage.", "Upon returning to base, you went straight to the hospital.")
                     injured = true
                     yourHits = 0
                 } else if (hitPunisher < 0.25) {
                     messages.push(`${todaysPartner.name} was injured during the barrage of anti-aircraft fire.`)
+                    console.log(todaysPartner, this.state.characters.living.filter(char => char !== todaysPartner))
                     this.setState({
                         sanity: this.state.sanity - 10,
                         characters: {
@@ -327,20 +340,20 @@ export default class GamePlay extends React.Component {
                 }
             }
         } else {
-            messages.push("There was no sign of Germans anywhere.")
+            messages.push("It was an uneventful mission.")
             
             this.setState((state) => ({
                 sanity: state.sanity + 1,
             }))
         }
 
-        await this.displayMessages(...messages)
-
+        
         if (dead) {
             this.deathScreen()
-
+            
         } else {
-
+            
+            await this.displayMessages(...messages)
             if (injured) {
                 this.setState({
                     flown: this.state.flown + 1,
@@ -367,7 +380,7 @@ export default class GamePlay extends React.Component {
     deathScreen = async () => {
         await this.displayMessages("Game Ended")
         this.setState({
-            id: 0,
+            gameId: 0,
             activeBtn: false
         })
     }
@@ -427,7 +440,7 @@ export default class GamePlay extends React.Component {
     postTurnChecks = async () => {
         let toGoal = this.state.goal - this.state.flown
         // checks whether the missions goal should be raised
-        if (Math.random() < 1/(toGoal**1.5) - (0.1/toGoal)) {await this.cathcart()}
+        if (Math.random() < 1/(toGoal**1.5) - (0.1/(toGoal + 0.0000001))) {await this.cathcart(toGoal)}
 
         // checks whether it is payday
         if (this.state.dayCount % 7 === 0) {await this.payday()}
@@ -463,7 +476,7 @@ export default class GamePlay extends React.Component {
                 await this.displayMessages("Out of nowhere, Nately's girlfriend attacked you.", "You managed to dodge her attack.")
             } else if (attack < 0.04) {
                 await this.displayMessages("Out or nowhere, Nately's girlfriend attacked you.", "She caught you with her knife.")
-                this.injury('Knife wound')
+                this.injury('knife wound')
             }
         }
 
@@ -522,9 +535,9 @@ export default class GamePlay extends React.Component {
         this.provideOptions(...options)
     }
 
-    getItOn = async () => {
+    getItOn = async () => { 
         this.clearOptions()
-        await this.displayMessages("We're not going to go into detail on this.")
+        await this.displayMessages("You had a wonderful day with Nurse Duckett.", "But we're not going to go into any detail.")
         this.setState({
             sanity: this.state.sanity + 3,
             daysWithoutGift: this.state.daysWithoutGift - 1 < 0 ? 0 : this.state.daysWithoutGift - 1,
@@ -678,20 +691,25 @@ export default class GamePlay extends React.Component {
         }), this.postTurnChecks)
     }
     
-    cathcart = async () => {
-        let toGoal = this.state.goal - this.state.flown
+    cathcart = async (toGoal) => {
+        let messages = []
+        if (!toGoal) {messages.push("Just as your paperwork was being filed, Colonel Cathcart raised the number of missions.")}
+
         if (Math.random() < 0.2) {
+            let newGoal = this.state.goal + 10
+            messages.push('Just as you approached your goal, Colonel Cathcart raised the required number of missions by TEN to ' + newGoal + '!')
             this.setState({
-                goal: this.state.goal + 10,
+                goal: newGoal,
                 sanity: this.state.sanity - Math.max(10 - toGoal, 1)
             })
-            await this.displayMessages('Just as you approached your goal, Colonel Cathcart raised the required number of missions by TEN to ' + this.state.goal + '.')
+            await this.displayMessages(...messages)
         } else {
+            let newGoal = this.state.goal + 5
             this.setState({
-                goal: this.state.goal + 5,
+                goal: newGoal,
                 sanity: this.state.sanity - Math.max(5 - toGoal, 0)
             })
-            await this.displayMessages('Just as you approached your goal, Colonel Cathcart raised the required number of missions by five to ' + this.state.goal)
+            await this.displayMessages(...messages, 'Just as you approached your goal, Colonel Cathcart raised the required number of missions by five to ' + newGoal + '.')
         }
     }
     

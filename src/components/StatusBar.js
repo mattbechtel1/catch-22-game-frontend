@@ -45,7 +45,7 @@ export default class StatusBar extends React.Component {
                                     name='soundOn'
                                     checked={soundOn} 
                                     onChange={changeSound} /> 
-                                    <span>Play Sound</span>
+                                    <span> Play Sound</span>
                                 </div>
                                 <div style={{padding: '5px'}}>
                                     <span>Text Speed</span>
@@ -56,8 +56,7 @@ export default class StatusBar extends React.Component {
                                             name="timings"
                                             value={4500}
                                             onChange={changeTextSpeed}
-                                            checked={timings === 4500} />
-                                            Slow
+                                            checked={timings === 4500} /> Slow
                                         </label>
                                     </div>
 
@@ -68,8 +67,7 @@ export default class StatusBar extends React.Component {
                                             name="timings"
                                             value={3000}
                                             onChange={changeTextSpeed}
-                                            checked={timings === 3000} />
-                                            Medium
+                                            checked={timings === 3000} /> Medium
                                         </label>
                                     </div>
 
@@ -80,8 +78,7 @@ export default class StatusBar extends React.Component {
                                             name="timings"
                                             value={1500}
                                             onChange={changeTextSpeed}
-                                            checked={timings === 1500} />
-                                            Fast
+                                            checked={timings === 1500} /> Fast
                                         </label>
                                     </div>
                                 </div>
@@ -95,7 +92,7 @@ export default class StatusBar extends React.Component {
                 <div>Sanity: <Progress value={sanity} total='100' color='yellow' /></div>
                 <div className='flex-left-to-right'>
                     <div style={{width: '90%'}} >✈ Missions Complete: <Progress indicating value={flown} total={goal} progress='ratio' color='red' /></div>
-                    {name && activeBtn ? <div><Button color='green' onClick={save}>Save</Button></div> : null}       
+                    {name ? <div><Button color='green' inverted={activeBtn} onClick={activeBtn ? save : null}>{activeBtn ? 'Save' : 'Saved'}</Button></div> : null}       
                 </div>
         </div>
     )
