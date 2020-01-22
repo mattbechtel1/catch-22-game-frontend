@@ -441,7 +441,7 @@ export default class GamePlay extends React.Component {
         else {randoInj = injury}
 
         const daysInHospital = Math.floor(Math.random() * 20) + 1
-        const weeksInHospital = daysInHospital > 14 ? 2 : (daysInHospital > 7 ? 2 : 0)
+        const weeksInHospital = daysInHospital > 14 ? 2 : (daysInHospital > 7 ? 1 : 0)
         const sanityChange = this.state.sanity > 50 ? -daysInHospital : daysInHospital
         
         this.setState({
