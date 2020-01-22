@@ -5,6 +5,7 @@ import NewGameForm from '../components/NewGameForm'
 import PartnerCard from '../components/PartnerCard'
 import OptionList from '../components/OptionList'
 import Message from '../components/Message'
+import swal from 'sweetalert';
 import {Loader} from 'semantic-ui-react'
 
 export default class GamePlay extends React.Component {
@@ -87,7 +88,7 @@ export default class GamePlay extends React.Component {
                 this.gameBegin()
             })
         } else {
-            alert('You must supply a name to begin a game.')
+            swal('You must supply a name to begin a game.')
         }
     }
 

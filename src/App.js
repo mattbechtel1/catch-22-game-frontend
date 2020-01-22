@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-rout
 import {Login, Signup, Logout} from './components/Login'
 import GamePlay from './containers/Gameplay.js'
 import {Button, Container, Loader} from 'semantic-ui-react'
+import swal from 'sweetalert'
 
 class App extends React.Component {
   constructor() {
@@ -98,7 +99,7 @@ class App extends React.Component {
           userGames: data.user.games
         })
       } else {
-        alert(data.message)
+        swal(data.message)
       }
     })
 
