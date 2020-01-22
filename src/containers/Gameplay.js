@@ -45,7 +45,7 @@ export default class GamePlay extends React.Component {
              })   
     }
 
-    injuryOptions = () => ["liver disease", "food poisoning", "a broken finger", "a leg wound", "a scrotal injury", "torn pants", "athlete's foot", "mistaken identity"]
+    injuryOptions = ["liver disease", "food poisoning", "a broken finger", "a leg wound", "a scrotal injury", "torn pants", "athlete's foot", "mistaken identity"]
 
     newGame = (e) => {
         e.preventDefault()
@@ -384,7 +384,8 @@ export default class GamePlay extends React.Component {
 
     injury = async (injury) => {
         let randoInj
-        if (!injury) {randoInj = this.injuryOptions()[Math.floor(Math.random() * 8)]} else {randoInj = injury}
+        if (!injury) {randoInj = this.injuryOptions[Math.floor(Math.random() * 8)]} 
+        else {randoInj = injury}
 
         const daysInHospital = Math.floor(Math.random() * 20) + 1
         const weeksInHospital = daysInHospital > 14 ? 2 : (daysInHospital > 7 ? 2 : 0)
@@ -603,7 +604,7 @@ export default class GamePlay extends React.Component {
         })
     }
         
-        buyGift = () => {
+    buyGift = () => {
         this.setState({
             daysWithoutGift: 0,
             money: this.state.money - 12
@@ -720,7 +721,7 @@ export default class GamePlay extends React.Component {
                         <div><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/></div>
                         <div style={{position: 'relative', bottom: '5px', paddingTop: '25px'}}><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.specialActive} /></div>
                     </div>
-                    <div className='gridlines full-center' style={{width: '80%'}}>
+                    <div className='gridlines full-center black-bg' style={{width: '80%'}}>
                         {this.state.activePartner ? 
                             <PartnerCard unmount={this.deactivateCharacterCard} character={this.state.activePartner} /> 
                             :

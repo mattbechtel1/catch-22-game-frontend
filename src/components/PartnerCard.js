@@ -24,12 +24,12 @@ class PartnerCard extends React.Component {
     }
 
     render() {
-        const {description, name, occupation} = this.props.character
+        const {description, name, occupation, erraticness, image_url} = this.props.character
 
         return ( 
             <div className='inner-center-tall' ref={node => {this.node = node}}>
                 <Card>
-                    <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false} />
+                    {image_url ? <Image src={image_url} wrapped ui={false} /> : null}
                     <Card.Content>
                         <Card.Header>{name}</Card.Header>
                         <Card.Meta><span className='date'>{occupation}</span></Card.Meta>
@@ -38,7 +38,7 @@ class PartnerCard extends React.Component {
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>
-                        {/* <a><Icon name='user' />22 Friends</a> */}
+                        Flight Erraticness: {erraticness ? erraticness : 'N/A'}
                     </Card.Content>
                 </Card>
             </div>

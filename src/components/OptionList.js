@@ -12,7 +12,7 @@ const OptionList = ({options}) => {
 
     return <div>
         <Button.Group vertical>
-            {options.map((option, index) => <Button key={option.text} color={colorDetermine(index)} onClick={option.callResult}>{option.text}</Button>)}
+            {options.map((option, index) => <Button inverted key={option.text} color={colorDetermine(index)} onClick={option.callResult}>{option.text}</Button>)}
         </Button.Group>
     </div>
 }

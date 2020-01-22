@@ -42,7 +42,7 @@ code {
 .grey-background {
   background-color: rgba(158, 176, 192, 0.424);
   border-color: black;
-  border-width: 5px;
+  border-width: 3px;
   border-style: solid;
 }
 
@@ -112,4 +112,8 @@ code {
   width: 20px;
   height: 10px;
   border: 3px solid #73AD21;
+}
+
+.black-bg {
+ background-color: black;
 }

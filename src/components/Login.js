@@ -1,68 +1,64 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {Button, Segment} from 'semantic-ui-react'
+import {Button, Container, Input} from 'semantic-ui-react'
 
 export const Login = ({formSubmit}) => {
     return (<div>
-        <Segment inverted>
+        <Container style={{backgroundColor: 'black'}} className='white-text'>
             <form onSubmit={formSubmit} action='/'>
-                <div>
-                    <label><em>User Name</em></label>
-                    <input type="text" name="playerName" />
+                <div style={{padding: '3px'}}>
+                    <label><em>Username</em></label> <Input name="playerName" />
                 </div>
-                <div>
-                    <label><em>Password</em></label>
-                    <input type='password' name='password' />
+                <div style={{padding: '3px'}}>
+                    <label><em>Password</em></label> <Input type='password' name='password' />
                 </div>
-                <div>
-                    <Button inverted color='red' type='submit'>Submit</Button> 
+                <div style={{padding: '3px'}}>
+                    <Button inverted color='red' type='submit'>Submit</Button>
+                    <Link to='/signup'><Button inverted color='red'>Register</Button></Link> 
                 </div>
             </form>
-            <Link to='/signup'>
-                <Button inverted color='red'>Register</Button>
-            </Link>
-        </Segment>
+            
+        </Container>
     </div>)
 }
 
 export const Signup = ({formSubmit}) => {
     return (<div>
-        <Segment inverted>
+        <Container style={{backgroundColor: 'black'}} className='white-text'>
             <form onSubmit={formSubmit}>
-                <div>
-                    <label>Player Name</label>
-                    <input type="text" name="playerName" />
+                <div style={{padding: '3px'}}>
+                    <label><em>Username</em></label>
+                    <Input name="playerName" />
                 </div>
-                <div>
-                    <label>Password</label>
-                    <input type='password' name='password' />
+                <div style={{padding: '3px'}}>
+                    <label><em>Password</em></label>
+                    <Input type='password' name='password' />
                 </div>
-                <div>
-                    <Button inverted color='red' type='submit'>Submit</Button> 
+                <div style={{padding: '3px'}}>
+                    <Button inverted color='red' type='submit'>Submit</Button>
+                    <Link to='/login'><Button inverted color='red'>Log In</Button></Link> 
                 </div>
             </form>
             <div>
-            <Link to='/login'>
-                <Button inverted color='red'>Log In</Button>
-            </Link>
+            
             </div>
-        </Segment>
+        </Container>
     </div>) 
 }
 
 export const Logout = ({formSubmit}) => {
     return (<div>
-        <Segment inverted>
-                <div>
-                    <label>Are you Sure You Want to Log Out?</label>
-                </div>
+        <Container style={{backgroundColor: 'black'}} className='white-text'>
+            <div style={{padding: '3px'}}>
+                <label>Are you Sure You Want to Log Out?</label>
+            </div>
 
-                <div>
-                    <Button inverted color='red' onClick={formSubmit}>Yes</Button> 
-                    <Link to='/play'>
-                        <Button inverted color='red'>Not Yet</Button>
-                    </Link>
-                </div>
-        </Segment>
+            <div style={{padding: '3px'}}>
+                <Button inverted color='red' onClick={formSubmit}>Yes</Button> 
+                <Link to='/play'>
+                    <Button inverted color='red'>Not Yet</Button>
+                </Link>
+            </div>
+        </Container>
     </div>) 
 }

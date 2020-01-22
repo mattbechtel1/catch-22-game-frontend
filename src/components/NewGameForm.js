@@ -17,8 +17,8 @@ export default class NewGameForm extends Component {
         return <form onSubmit={this.props.start} className='inner-center'>
             <label><h2>Set Character Name:</h2></label><br />
             <Input focus placeholder='Yossarian' type='text' name='name' value={this.state.playerName} onChange={this.handleChange}/>
-            <div>
-                <Button type='submit' icon color='blue' labelPosition="right">Start Game<Icon name="right arrow" /></Button>
+            <div style={{padding: '3px'}}>
+                <Button type='submit' icon inverted color='blue' labelPosition="right">Start Game<Icon name="right arrow" /></Button>
             </div>
         </form>
     }

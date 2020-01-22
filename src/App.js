@@ -4,7 +4,7 @@ import './App.css';
 import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom'
 import {Login, Signup, Logout} from './components/Login'
 import GamePlay from './containers/Gameplay.js'
-import {Button} from 'semantic-ui-react'
+import {Button, Container} from 'semantic-ui-react'
 
 class App extends React.Component {
   constructor() {
@@ -52,6 +52,7 @@ class App extends React.Component {
     "It made him proud that 29 months in the service had not blunted his genius for ineptitude.",
     "Under Colonel Korn's rule, the only people permitted to ask questions were those who never did.",
     "I see everything twice!",
+    "What's good for Milo Minderbinder is good for the country.",
     "And it wasn't their fault that they were courageous, confident and carefree. He would just have to be patient with them until one or two were killed and the rest wounded, and then they would all turn out okay.",
     "Dear Mrs., Mr., Miss, or Mr. and Mrs. Daneeka: Words cannot express the deep personal grief I experienced when your husband, son, father, or brother was killed, wounded, or reported missing in action."]
 
@@ -88,12 +89,14 @@ class App extends React.Component {
             </Route>
             <Route exact path ='/'>
               { player ? 
-                <div className='full-center extend-to-fill-height'>
+                <div className='black-bg full-center extend-to-fill-height'>
                   {/* options to load previous games go here */}
                   <Link className='inner-center' to='/play'><Button inverted color='red'>Start a New Game</Button></Link>
                 </div>
                 :
-              <div>"{this.quotes[Math.floor(Math.random()*this.quotes.length)]}"</div> }
+                <Container className='black-bg white-text'>
+                  <h4>"{this.quotes[Math.floor(Math.random()*this.quotes.length)]}"</h4>
+                </Container> }
             </Route>
             <Route path='/play'>
               {player ? <GamePlay user={this.player}/> : <Redirect to='/login'/> }

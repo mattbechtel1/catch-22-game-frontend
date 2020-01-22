@@ -18,7 +18,7 @@ export default class StatusBar extends React.Component {
     }
 
     determineColor = () => {
-        return this.state.settingsActive ? 'blue' : 'grey'
+        return this.state.settingsActive ? 'teal' : 'grey'
     }
 
     
@@ -33,19 +33,21 @@ export default class StatusBar extends React.Component {
                 <div>Accumulated Leave: {Math.round(leave * 10)/10} Days</div>
                 <div>
                     {name ? 
-                    <Modal trigger={<Icon name='settings' color={this.determineColor()} onMouseOver={this.activateSettings} onMouseOut={this.deactivateSettings}/>}>
+                    <Modal size='mini'
+                        trigger={<Icon name='settings' size='large' color={this.determineColor()} onMouseOver={this.activateSettings}
+                        onMouseOut={this.deactivateSettings}/>}>
                         <Modal.Header>Options</Modal.Header>
                         <Modal.Content>
                         <Modal.Description>
                             <form>
-                                <div>
+                                <div style={{padding: '5px'}}>
                                     <input type='checkbox' 
                                     name='soundOn'
                                     checked={soundOn} 
                                     onChange={changeSound} /> 
                                     <span>Play Sound</span>
                                 </div>
-                                <div>
+                                <div style={{padding: '5px'}}>
                                     <span>Text Speed</span>
                                     <div className="form-check">
                                         <label>
