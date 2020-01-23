@@ -541,7 +541,7 @@ export default class GamePlay extends React.Component {
     }
 
     loseGirlfriend = async () => {
-        this.displayMessages('Nurse Duckett decided she wanted to marry a doctor and being seen with you would jeopardize her chances at finding a husband.')
+        this.displayMessages('Nurse Duckett decided she wanted to marry a doctor and being seen with you would jeopardize her chances at finding a suitable husband.')
         this.setState({
             characters: {
                     ...this.state.characters,
@@ -581,7 +581,7 @@ export default class GamePlay extends React.Component {
 
     getItOn = async () => { 
         this.clearOptions()
-        await this.displayMessages("You had a wonderful day with Nurse Duckett.", "But we're not going to go into any detail.")
+        await this.displayMessages("You had a wonderful day with Nurse Duckett.", "But we're not going to go into the details.")
         this.setState({
             sanity: this.state.sanity + 3,
             daysWithoutGift: this.state.daysWithoutGift - 1 < 0 ? 0 : this.state.daysWithoutGift - 1,
@@ -629,6 +629,7 @@ export default class GamePlay extends React.Component {
     visitRome = async () => { 
         this.clearOptions()
         this.setState({money: this.state.money -50})
+        
         if (this.datingDuckett() && this.state.money >= 12) {
             await this.displayMessages("Would you like to buy Nurse Duckett a gift while in Rome?")
             this.provideOptions({text: 'Yes $12', callResult: this.buyGift}, {text: "No, I'll pass.", callResult: this.noGift})
@@ -717,7 +718,7 @@ export default class GamePlay extends React.Component {
                 leave: this.state.leave - 7
             })
         } else if (this.state.characters.living.find(char => char.name === 'McWatt')) {
-            await this.displayMessages('During a day off, McWatt playfully buzzes the beach while pilots and soliders enjoy a warm summer day.', "Flying too close the surface, McWatt's propellor slices a young pilot in half.", 'Immediately realizing the result of his action, McWatt flies his plane into the side of a mountain.', `Colonel Cathcart is so upset, he has raised the number of missions to ${this.state.goal + 5}.`)
+            await this.displayMessages('During a day off, McWatt playfully buzzes the beach while pilots and soliders enjoy a warm summer day.', "Flying too close the surface, McWatt's propellor slices a young beachgoer in half.", 'Immediately realizing the result of his action, McWatt flies his plane into the side of a mountain.', `Colonel Cathcart is so upset, he has raised the number of missions to ${this.state.goal + 5}.`)
             this.setState({
                 sanity: this.state.sanity - 7,
                 goal: this.state.goal + 5,
