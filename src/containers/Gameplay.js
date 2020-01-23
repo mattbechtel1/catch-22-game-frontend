@@ -728,7 +728,7 @@ export default class GamePlay extends React.Component {
                 }
             })
         } else if (this.state.characters.storage.find(char => char.name === "Orr")) {
-            await this.displayMessages('You heard a rumor that Orr survived his crash landing and sailed to freedom in Sweden.', 'You pondered whether you should go AWOL.')
+            await this.displayMessages('You heard a rumor that Orr survived his crash landing and sailed to freedom in Sweden.', 'You ponder whether you should go AWOL.')
             this.setState({
                 sanity: this.state.sanity + 3,
                 characters: {
@@ -788,15 +788,26 @@ export default class GamePlay extends React.Component {
     render() {
         return (
             <div>
-                <StatusBar gameState={this.state} save={this.saveGame} blurClass={this.determineBlur} changeSound={this.changeSound} changeTextSpeed={this.changeTimings} />
+                <StatusBar 
+                    gameState={this.state} 
+                    save={this.saveGame} 
+                    blurClass={this.determineBlur} 
+                    changeSound={this.changeSound} 
+                    changeTextSpeed={this.changeTimings} />
+                
                 { this.state.loading ?
                 <div style={{margin: '50px'}}><Loader active inline='centered' /></div> 
                 :
                 <div className='extend-to-fill-height gridlines' style={{display: 'flex'}}>
                     <div className={this.determineBlur()} style={{width: '20%', flexDirection: 'column', flex: 1}}>
-                        <div><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/></div>
-                        <div style={{position: 'relative', bottom: '5px', paddingTop: '25px'}}><PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.specialActive} /></div>
+                        <div>
+                            <PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.living}/>
+                        </div>
+                        <div style={{position: 'relative', bottom: '5px', paddingTop: '25px'}}>
+                            <PartnerList clickHandler={this.showCharacterCard} people={this.state.characters.specialActive} />
+                        </div>
                     </div>
+
                     <div className='gridlines full-center black-bg' style={{width: '80%'}}>
                         {this.state.activePartner ? 
                             <PartnerCard unmount={this.deactivateCharacterCard} character={this.state.activePartner} /> 
