@@ -512,9 +512,9 @@ export default class GamePlay extends React.Component {
         // checks whether Nately's Whore is after you
         if (this.state.characters.specialActive.find(char => char.name === `Nately's Whore`)) {
             let attack = Math.random()
-            if (attack < 0.02) {
+            if (attack < 0.04) {
                 await this.displayMessages("Out of nowhere, Nately's girlfriend attacked you.", "You managed to dodge her attack.")
-            } else if (attack < 0.04) {
+            } else if (attack < 0.08) {
                 await this.displayMessages("Out or nowhere, Nately's girlfriend attacked you.", "She caught you with her knife.")
                 this.injury('a knife wound')
             }
@@ -541,7 +541,7 @@ export default class GamePlay extends React.Component {
     }
 
     loseGirlfriend = async () => {
-        await this.displayMessages('Nurse Duckett decided she wanted to marry a doctor and being seen with you would jeopardize her chances at finding a husband.')
+        this.displayMessages('Nurse Duckett decided she wanted to marry a doctor and being seen with you would jeopardize her chances at finding a husband.')
         this.setState({
             characters: {
                     ...this.state.characters,
